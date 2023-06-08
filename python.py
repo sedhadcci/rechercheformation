@@ -10,8 +10,10 @@ def load_data(file):
 def search_data(df, query, columns):
     results = []
     for col in columns:
-        matches = process.extractBests(query, df[col], score_cutoff=70)
-        results.extend(matches)
+        df['Match_Score'] = df[col].apply(lambda row: process.extractOne(query, [str(row)], score_cutoff=70))
+        matched_df = df[df['Match_Score'].notna()]
+        for i, row in matched_df.iterrows():
+            results.append(row['Resultat'])
     return results
 
 st.title("Moteur de recherche EXCEL")
