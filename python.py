@@ -1,5 +1,5 @@
 import pandas as pd
-from fuzzywuzzy import process
+from fuzzywuzzy import fuzz
 import streamlit as st
 
 @st.cache
@@ -12,8 +12,8 @@ def search_data(df, query, column='Compétences'):
     results = []
     phrases = [phrase.strip() for phrase in query.split(',')]
     for phrase in phrases:
-        df_copy['Match_Score'] = df_copy[column].apply(lambda row: process.extractOne(phrase, [str(row)], score_cutoff=70))
-        matched_df = df_copy[df_copy['Match_Score'].notna()]
+        df_copy['Match_Score'] = df_copy[column].apply(lambda row: fuzz.partial_ratio(phrase, str(row)) if fuzz.partial_ratio(phrase, str(row)) >= 70 else 0)
+        matched_df = df_copy[df_copy['Match_Score'] > 0]
         for i, row in matched_df.iterrows():
             result = {'Domaine': row['Domaine'], 'Nom formation': row['Nom formation'], 'Ecoles': row['Ecoles'], 'Resultat': row['Resultat']}
             results.append(result)
