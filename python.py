@@ -8,6 +8,7 @@ def load_data(file):
     return df
 
 def search_data(df, query, columns):
+    df_copy = df.copy()  # Crée une copie du DataFrame
     results = []
     for col in columns:
         df['Match_Score'] = df[col].apply(lambda row: process.extractOne(query, [str(row)], score_cutoff=70))
