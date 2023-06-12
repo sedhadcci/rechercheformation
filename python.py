@@ -17,7 +17,7 @@ def search_data(df, query, column='Mots clés compétences'):
         for i, row in matched_df.iterrows():
             result = {'Ecoles': row['Ecoles'], 'Filières / domaine': row['Filières / domaine'], 'Formation': row['Formation'], 'Poste': row['Poste'], 'Lien': row['Lien']}
             results.append(result)
-    return results
+    return pd.DataFrame(results)  # Retourne un DataFrame au lieu d'une liste de dictionnaires
 
 st.title("Moteur de recherche EXCEL")
 
@@ -28,5 +28,4 @@ if uploaded_file is not None:
     if query:
         st.subheader("Résultats de recherche")
         results = search_data(df, query)
-        for result in results:
-            st.write(result)
+        st.table(results)  # Affiche les résultats dans un tableau
