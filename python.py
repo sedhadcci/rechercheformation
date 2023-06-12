@@ -10,14 +10,14 @@ def load_data(file):
 def search_data(df, query, column='Mots clés compétences'):
     df_copy = df.copy()  # Crée une copie du DataFrame
     results = []
-    phrases = [phrase.strip() for phrase in query.split(',')]
+    phrases = [phrase.strip().lower() for phrase in query.split(',')]  # Convertit les phrases de recherche en minuscules
     for phrase in phrases:
-        df_copy['Match_Score'] = df_copy[column].apply(lambda row: fuzz.partial_ratio(phrase, str(row)) if fuzz.partial_ratio(phrase, str(row)) >= 70 else 0)
+        df_copy['Match_Score'] = df_copy[column].apply(lambda row: fuzz.partial_ratio(phrase, str(row).lower()) if fuzz.partial_ratio(phrase, str(row).lower()) >= 70 else 0)  # Convertit les mots de la colonne de compétences en minuscules avant de comparer leur similarité
         matched_df = df_copy[df_copy['Match_Score'] > 0]
         for i, row in matched_df.iterrows():
             result = {'Ecoles': row['Ecoles'], 'Filières / domaine': row['Filières / domaine'], 'Formation': row['Formation'], 'Poste': row['Poste'], 'Lien': row['Lien']}
             results.append(result)
-    return pd.DataFrame(results)  # Retourne un DataFrame au lieu d'une liste de dictionnaires
+    return pd.DataFrame(results)
 
 st.title("Moteur de recherche EXCEL")
 
@@ -28,4 +28,4 @@ if uploaded_file is not None:
     if query:
         st.subheader("Résultats de recherche")
         results = search_data(df, query)
-        st.table(results)  # Affiche les résultats dans un tableau
+        st.table(results)
