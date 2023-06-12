@@ -7,7 +7,7 @@ def load_data(file):
     df = pd.read_excel(file)
     return df
 
-def search_data(df, query, column='Compétences'):
+def search_data(df, query, column='Mots clés compétences'):
     df_copy = df.copy()  # Crée une copie du DataFrame
     results = []
     phrases = [phrase.strip() for phrase in query.split(',')]
@@ -15,7 +15,7 @@ def search_data(df, query, column='Compétences'):
         df_copy['Match_Score'] = df_copy[column].apply(lambda row: fuzz.partial_ratio(phrase, str(row)) if fuzz.partial_ratio(phrase, str(row)) >= 70 else 0)
         matched_df = df_copy[df_copy['Match_Score'] > 0]
         for i, row in matched_df.iterrows():
-            result = {'Domaine': row['Domaine'], 'Nom formation': row['Nom formation'], 'Ecoles': row['Ecoles'], 'Resultat': row['Resultat']}
+            result = {'Ecoles': row['Ecoles'], 'Filières / domaine': row['Filières / domaine'], 'Formation': row['Formation'], 'Poste': row['Poste'], 'Lien': row['Lien']}
             results.append(result)
     return results
 
