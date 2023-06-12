@@ -12,7 +12,7 @@ def search_data(df, query, column='Mots clés compétences'):
     results = []
     phrases = [phrase.strip().lower() for phrase in query.split(',')]  # Convertit les phrases de recherche en minuscules
     for phrase in phrases:
-        df_copy['Match_Score'] = df_copy[column].apply(lambda row: fuzz.partial_ratio(phrase, str(row).lower()) if fuzz.partial_ratio(phrase, str(row).lower()) >= 70 else 0)  # Convertit les mots de la colonne de compétences en minuscules avant de comparer leur similarité
+        df_copy['Match_Score'] = df_copy[column].apply(lambda row: 100 if phrase == str(row).lower() else (fuzz.partial_ratio(phrase, str(row).lower()) if fuzz.partial_ratio(phrase, str(row).lower()) >= 70 else 0))  # Vérifie d'abord la correspondance exacte, puis compare la similarité
         matched_df = df_copy[df_copy['Match_Score'] > 0]
         for i, row in matched_df.iterrows():
             result = {'Ecoles': row['Ecoles'], 'Filières / domaine': row['Filières / domaine'], 'Formation': row['Formation'], 'Poste': row['Poste'], 'Lien': row['Lien']}
