@@ -3,7 +3,7 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 
 def load_data(url):
-    data = pd.read_excel(url)
+    data = pd.read_excel(url, engine='openpyxl')
     return data
 
 def search_data(df, query, column='Mots clés compétences'):
