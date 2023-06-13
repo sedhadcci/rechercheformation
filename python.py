@@ -21,7 +21,7 @@ def search_data(df, query, column='Mots clés compétences'):
 
 st.title("Moteur de recherche EXCEL")
 
-url = 'https://github.com/sedhadcci/rechercheformation/blob/7fc5a699bf12054b768b514a31740d8bb53b10ac/ISTEC%20recherche%20formation.xlsx'  # Remplacer par l'URL de votre fichier
+url = 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fsedhadcci%2Frechercheformation%2Fmain%2FISTEC%2520recherche%2520formation.xlsx&wdOrigin=BROWSELINK'  # Remplacer par l'URL de votre fichier
 df = load_data(url)
 query = st.text_input("Entrer le(s) phrase(s) à rechercher, séparées par des virgules")
 if query:
