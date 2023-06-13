@@ -1,8 +1,7 @@
+import streamlit as st
 import pandas as pd
 from fuzzywuzzy import fuzz
-import streamlit as st
 
-@st.cache
 def load_data(url):
     data = pd.read_excel(url)
     return data
@@ -21,10 +20,11 @@ def search_data(df, query, column='Mots clés compétences'):
 
 st.title("Moteur de recherche EXCEL")
 
-url = 'https://github.com/sedhadcci/rechercheformation/blob/7fc5a699bf12054b768b514a31740d8bb53b10ac/ISTEC%20recherche%20formation.xlsx'  # Remplacer par l'URL de votre fichier
+url = 'https://github.com/yourusername/yourrepository/raw/main/yourfile.xlsx'  # Remplacer par l'URL de votre fichier
 df = load_data(url)
 query = st.text_input("Entrer le(s) phrase(s) à rechercher, séparées par des virgules")
 if query:
-        st.subheader("Résultats de recherche")
-        results = search_data(df, query)
-        st.table(results)  # Affiche les résultats dans un tableau
+    st.subheader("Résultats de recherche")
+    results = search_data(df, query)
+    st.table(results)  # Affiche les résultats dans un tableau
+
