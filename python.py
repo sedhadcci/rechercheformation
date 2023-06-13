@@ -3,9 +3,9 @@ from fuzzywuzzy import fuzz
 import streamlit as st
 
 @st.cache
-def load_data(file):
-    df = pd.read_excel(file)
-    return df
+def load_data(url):
+    data = pd.read_excel(url)
+    return data
 
 def search_data(df, query, column='Mots clés compétences'):
     df_copy = df.copy()  # Crée une copie du DataFrame
@@ -21,11 +21,10 @@ def search_data(df, query, column='Mots clés compétences'):
 
 st.title("Moteur de recherche EXCEL")
 
-uploaded_file = st.file_uploader("Choisir un fichier Excel", type="xlsx")
-if uploaded_file is not None:
-    df = load_data(uploaded_file)
-    query = st.text_input("Entrer le(s) phrase(s) à rechercher, séparées par des virgules")
-    if query:
+url = 'https://github.com/sedhadcci/rechercheformation/blob/7fc5a699bf12054b768b514a31740d8bb53b10ac/ISTEC%20recherche%20formation.xlsx'  # Remplacer par l'URL de votre fichier
+df = load_data(url)
+query = st.text_input("Entrer le(s) phrase(s) à rechercher, séparées par des virgules")
+if query:
         st.subheader("Résultats de recherche")
         results = search_data(df, query)
         st.table(results)  # Affiche les résultats dans un tableau
