@@ -18,6 +18,7 @@ def search_data(df, query, column='Mots clés compétences'):
             results.append(result)
     return pd.DataFrame(results)  # Retourne un DataFrame au lieu d'une liste de dictionnaires
 
+
 st.title("Moteur de recherche EXCEL")
 
 url = 'https://github.com/sedhadcci/rechercheformation/blob/7fc5a699bf12054b768b514a31740d8bb53b10ac/ISTEC%20recherche%20formation.xlsx'  # Remplacer par l'URL de votre fichier
