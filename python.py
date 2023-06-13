@@ -1,31 +1,40 @@
 import streamlit as st
 import pandas as pd
+from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
 
+@st.cache(allow_output_mutation=True)
 def load_data(url):
     data = pd.read_excel(url, engine='openpyxl')
     return data
 
-def search_data(df, query, column='Mots clés compétences'):
-    df_copy = df.copy()  # Crée une copie du DataFrame
-    results = []
-    phrases = [phrase.strip().lower() for phrase in query.split(',')]  # Convertit chaque phrase en minuscules
-    for phrase in phrases:
-        df_copy['Match_Score'] = df_copy[column].apply(lambda row: fuzz.partial_ratio(phrase, str(row).lower()) if fuzz.partial_ratio(phrase, str(row).lower()) >= 70 else 0)  # Compare les phrases et les lignes en minuscules
-        matched_df = df_copy[df_copy['Match_Score'] > 0]
-        for i, row in matched_df.iterrows():
-            result = {'Ecoles': row['Ecoles'], 'Filières / domaine': row['Filières / domaine'], 'Formation': row['Formation'], 'Poste': row['Poste'], 'Lien': row['Lien'], 'TYPE': row['TYPE']}
-            results.append(result)
-    return pd.DataFrame(results)  # Retourne un DataFrame au lieu d'une liste de dictionnaires
+def search_data(df, query, column='Mots clés compétences', result_columns=None):
+    if result_columns is None:
+        result_columns = ['Ecoles', 'Filières / domaine', 'Formation', 'Poste', 'Lien', 'TYPE']
 
+    matched_indexes = []
+    for keyword in query:
+        matches = process.extract(keyword, df[column], scorer=fuzz.token_set_ratio)
+        for match in matches:
+            if match[1] >= 70:
+                matched_indexes.extend(df[df[column] == match[0]].index.tolist())
+    return df.loc[matched_indexes, result_columns]
 
-st.title("Moteur de recherche EXCEL")
+url_istec = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/ISTEC%20recherche%20formation.xlsx'
+url_cci = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Groupe%20éducatif%20CCI%20moteur%20de%20recherche%20formation.xlsx'
 
-url = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/ISTEC%20recherche%20formation.xlsx'  # Remplacer par l'URL de votre fichier
+file_choice = st.radio("Choisissez un fichier pour effectuer la recherche:", ('ISTEC', 'Groupe éducatif CCI'))
+
+if file_choice == 'ISTEC':
+    url = url_istec
+elif file_choice == 'Groupe éducatif CCI':
+    url = url_cci
+
 df = load_data(url)
-query = st.text_input("Entrer le(s) phrase(s) à rechercher, séparées par des virgules")
-if query:
-    st.subheader("Résultats de recherche")
-    results = search_data(df, query)
-    st.table(results)  # Affiche les résultats dans un tableau
 
+query = st.text_input('Entrez votre recherche ici:')
+query = [i.lower() for i in query.split(",")]
+
+if st.button('Rechercher'):
+    results = search_data(df, query)
+    st.write(results)
