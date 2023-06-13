@@ -10,7 +10,7 @@ def load_data(url):
 
 def search_data(df, query, column='Mots clés compétences', result_columns=None):
     if result_columns is None:
-        result_columns = ['Ecoles', 'Filières / domaine', 'Formation', 'Poste', 'Lien', 'TYPE']
+        result_columns = ['TYPE', 'Ecoles', 'Filières / domaine', 'Formation', 'Poste', 'Lien']
 
     matched_indexes = []
     for keyword in query:
