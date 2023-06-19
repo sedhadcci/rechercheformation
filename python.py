@@ -11,6 +11,18 @@ def load_data(url):
 def search_data(df, query, column='Mots clés compétences', result_columns=None):
     if result_columns is None:
         result_columns = ['TYPE', 'Ecoles', 'Filières / domaine', 'Formation', 'Poste', 'Lien']
+
+    matched_indexes = []
+    for keyword in query:
+        matches = process.extract(keyword, df[column], scorer=fuzz.token_set_ratio)
+        for match in matches:
+            if match[1] >= 70:
+                matched_indexes.extend(df[df[column] == match[0]].index.tolist())
+    return df.loc[matched_indexes, result_columns]
+
+def search_data_exact(df, query, column='Mots clés compétences', result_columns=None):
+    if result_columns is None:
+        result_columns = ['TYPE', 'Ecoles', 'Filières / domaine', 'Formation', 'Poste', 'Lien']
         
     df[column] = df[column].apply(lambda x: str(x).lower())
     return df[df[column].str.contains('|'.join(query))][result_columns]
@@ -33,6 +45,13 @@ df = load_data(url)
 query = st.text_input('Entrez votre recherche ici:')
 query = [i.lower() for i in query.split(",")]
 
+search_type = st.radio("Choisissez le type de recherche:", ('Recherche Fuzzy', 'Recherche Exacte'))
+st.write("La recherche fuzzy trouve les correspondances basées sur une mesure de similarité, même si les mots ne sont pas exactement les mêmes. La recherche exacte trouve uniquement les correspondances exactes.")
+
 if st.button('Rechercher'):
-    results = search_data(df, query)
+    if search_type == 'Recherche Fuzzy':
+        results = search_data(df, query)
+    else:
+        results = search_data_exact(df, query)
     st.write(results)
+
