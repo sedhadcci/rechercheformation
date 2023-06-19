@@ -28,14 +28,11 @@ def search_data_exact(df, query, column='Mots clés compétences', result_column
     return df[df[column].str.contains('|'.join(query))][result_columns]
 
 def print_results(df):
-    for i, row in df.iterrows():
-        st.markdown(f"**Type:** {row['TYPE']}")
-        st.markdown(f"**Ecoles:** {row['Ecoles']}")
-        st.markdown(f"**Filières / domaine:** {row['Filières / domaine']}")
-        st.markdown(f"**Formation:** {row['Formation']}")
-        st.markdown(f"**Poste:** {row['Poste']}")
-        st.markdown(f"**Lien:** [Cliquez ici]({row['Lien']})")
-        st.write("---")
+    df['Lien'] = df['Lien'].apply(make_clickable)
+    st.write(df.to_html(escape=False), unsafe_allow_html=True)
+
+def make_clickable(val):
+    return f'<a target="_blank" href="{val}">Lien</a>'
 
 url_istec = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/ISTEC%20recherche%20formation.xlsx'
 url_cci = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Groupe%20educatif.xlsx'
