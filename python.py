@@ -28,6 +28,9 @@ def search_data_exact(df, query, column='Mots clés compétences', result_column
     return df[df[column].str.contains('|'.join(query))][result_columns]
 
 def print_results(df):
+    # Replace all '\n' in the DataFrame with '<br>'
+    df = df.replace('\n','<br>', regex=True)
+    
     df['Lien'] = df['Lien'].apply(make_clickable)
     st.write(df.to_html(escape=False), unsafe_allow_html=True)
 
