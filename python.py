@@ -27,6 +27,16 @@ def search_data_exact(df, query, column='Mots clés compétences', result_column
     df[column] = df[column].apply(lambda x: str(x).lower())
     return df[df[column].str.contains('|'.join(query))][result_columns]
 
+def print_results(df):
+    for i, row in df.iterrows():
+        st.markdown(f"**Type:** {row['TYPE']}")
+        st.markdown(f"**Ecoles:** {row['Ecoles']}")
+        st.markdown(f"**Filières / domaine:** {row['Filières / domaine']}")
+        st.markdown(f"**Formation:** {row['Formation']}")
+        st.markdown(f"**Poste:** {row['Poste']}")
+        st.markdown(f"**Lien:** [Cliquez ici]({row['Lien']})")
+        st.write("---")
+
 url_istec = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/ISTEC%20recherche%20formation.xlsx'
 url_cci = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Groupe%20educatif.xlsx'
 url_Ferrandi = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Ferrandi%20mots%20cles.xlsx'
@@ -53,5 +63,4 @@ if st.button('Rechercher'):
         results = search_data(df, query)
     else:
         results = search_data_exact(df, query)
-    st.write(results)
-
+    print_results(results)
