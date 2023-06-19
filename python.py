@@ -16,7 +16,7 @@ def search_data(df, query, column='Mots clés compétences', result_columns=None
     for keyword in query:
         matches = process.extract(keyword, df[column], scorer=fuzz.token_set_ratio)
         for match in matches:
-            if match[1] >= 60:
+            if match[1] >= 50:
                 matched_indexes.extend(df[df[column] == match[0]].index.tolist())
     return df.loc[matched_indexes, result_columns]
 
