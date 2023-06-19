@@ -11,14 +11,9 @@ def load_data(url):
 def search_data(df, query, column='Mots clés compétences', result_columns=None):
     if result_columns is None:
         result_columns = ['TYPE', 'Ecoles', 'Filières / domaine', 'Formation', 'Poste', 'Lien']
-
-    matched_indexes = []
-    for keyword in query:
-        matches = process.extract(keyword, df[column], scorer=fuzz.token_set_ratio)
-        for match in matches:
-            if match[1] >= 70:
-                matched_indexes.extend(df[df[column] == match[0]].index.tolist())
-    return df.loc[matched_indexes, result_columns]
+        
+    df[column] = df[column].apply(lambda x: str(x).lower())
+    return df[df[column].str.contains('|'.join(query))][result_columns]
 
 url_istec = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/ISTEC%20recherche%20formation.xlsx'
 url_cci = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Groupe%20educatif.xlsx'
