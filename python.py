@@ -40,8 +40,10 @@ def make_clickable(val):
 url_istec = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/ISTEC%20recherche%20formation.xlsx'
 url_cci = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Groupe%20educatif%20V2.xlsx'
 url_Ferrandi = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/Ferrandi%20mots%20cles%20V2.xlsx'
+url_IA = 'https://raw.githubusercontent.com/sedhadcci/rechercheformation/main/IARECHERCHFORMATION.xlsx'
 
-file_choice = st.radio("Choisissez un fichier pour effectuer la recherche:", ('ISTEC', 'Groupe éducatif CCI' , 'Ferrandi'))
+
+file_choice = st.radio("Choisissez un fichier pour effectuer la recherche:", ('ISTEC', 'Groupe éducatif CCI' , 'Ferrandi' ,'IA'))
 
 if file_choice == 'ISTEC':
     url = url_istec
@@ -49,6 +51,8 @@ elif file_choice == 'Groupe éducatif CCI':
     url = url_cci
 elif file_choice == 'Ferrandi':
     url = url_Ferrandi
+elif file_choice == 'IA':
+    url = url_IA
 
 df = load_data(url)
 
